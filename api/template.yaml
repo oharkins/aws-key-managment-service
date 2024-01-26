@@ -268,6 +268,28 @@ Resources:
             Path: /services/{serviceId}/keys
             Method: GET
 
+  GetKeyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/get-key
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action: dynamodb:Query
+              Resource: !GetAtt KMSTable.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref KMSTable
+      Events:
+        FromApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AdminApi
+            Path: /services/{serviceId}/keys/{keyId}
+            Method: GET
+
   AddKeyFunction:
     Type: AWS::Serverless::Function
     Properties:

@@ -3,7 +3,7 @@ version = 0.1
 stack_name = "key-managment-service"
 resolve_s3 = true
 s3_prefix = "key-managment-service"
-region = "us-west-2"
+region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 disable_rollback = true
 parameter_overrides = "DomainName=\"corrections-dev.tylermobileapps.com\" CORSOrigin=\"*\" HostedZoneId=\"Z0400568NBE46SDQ3ZZN\""

@@ -187,10 +187,34 @@ paths:
           Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AddKeyFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
+
   /services/{serviceId}/keys/{keyId}:
     parameters:
       - $ref: '#/components/parameters/serviceId'
       - $ref: '#/components/parameters/keyId'
+    get:
+      summary: Gets key by Key Id
+      tags:
+        - Configuration
+      responses:
+        200:
+          description: Key found and returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetKeyFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
 
   /services/{serviceId}/keys/{keyId}/rotate:
     parameters:

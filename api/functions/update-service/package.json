@@ -1,5 +1,5 @@
 {
-    "name": "get-services",
+    "name": "update-service",
     "version": "1.0.0",
     "description": "Gets a list of profiles for a caller",
     "main": "index.js",
