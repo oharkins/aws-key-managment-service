@@ -135,21 +135,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "cj-jpp-angular-template:build:local"
+            "browserTarget": "aws-key-management-service-ui:build:local"
           },
           "configurations": {
             "prod": {
-              "browserTarget": "cj-jpp-angular-template:build:prod"
+              "browserTarget": "aws-key-management-service-ui:build:prod"
             },
             "development": {
-              "browserTarget": "cj-jpp-angular-template:build:development"
+              "browserTarget": "aws-key-management-service-ui:build:development"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cj-jpp-angular-template:build"
+            "browserTarget": "aws-key-management-service-ui:build"
           }
         },
         "lint": {

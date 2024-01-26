@@ -1,5 +1,5 @@
 {
-  "name": "cj-jpp-angular-template",
+  "name": "aws-key-management-service-ui",
   "version": "0.0.0",
   "scripts": {
     "start": "ng serve",
