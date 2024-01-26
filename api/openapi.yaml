@@ -1,0 +1,336 @@
+openapi: 3.0.0
+info:
+  title: Key Management API
+  version: 1.0.0
+  description: API for key storage and rotation
+
+x-amazon-apigateway-request-validators:
+  Validate All:
+    validateRequestParameters: true
+    validateRequestBody: true
+
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{ "message": "$context.error.validationErrorString" }'
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+
+tags:
+  - name: Configuration
+
+paths:
+  /services:
+    get:
+      summary: Gets profiles for all gift receivers
+      tags:
+        - Configuration
+      responses:
+        200:
+          description: Profile found and was returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceSummaries'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetServicesFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+    post:
+      summary: Adds a new service
+      tags:
+        - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                name:
+                  type: string
+                maxKeyAgeDays:
+                  type: number
+                  minimum: 14
+                  maximum: 1365
+                emails:
+                  type: array
+              required:
+                - name
+                - maxKeyAgeDays
+                - emails
+      responses:
+        201:
+          $ref: '#/components/responses/Created'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AddServiceFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+  /services/{serviceId}:
+    parameters:
+      - $ref: '#/components/parameters/serviceId'
+    get:
+      summary: Get details for a specific profile
+      tags:
+        - Configuration
+      responses:
+        200:
+          description: Profile found and was returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetServiceFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+    put:
+      summary: Update details for a specific profile
+      tags:
+        - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        204:
+          $ref: '#/components/responses/NoContent'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateServiceFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+  /services/{serviceId}/keys:
+    parameters:
+      - $ref: '#/components/parameters/serviceId'
+    get:
+      summary: Gets keys for a specific service
+      tags:
+        - Configuration
+      responses:
+        200:
+          description: Keys found and returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeySummaries'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetKeysFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+    post:
+      summary: Adds a new Key to a service
+      tags:
+        - Configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+
+      responses:
+        201:
+          $ref: '#/components/responses/Created'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AddKeyFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+  /services/{serviceId}/keys/{keyId}:
+    parameters:
+      - $ref: '#/components/parameters/serviceId'
+      - $ref: '#/components/parameters/keyId'
+
+  /services/{serviceId}/keys/{keyId}/rotate:
+    parameters:
+      - $ref: '#/components/parameters/serviceId'
+      - $ref: '#/components/parameters/keyId'
+
+components:
+  parameters:
+    serviceId:
+      name: serviceId
+      description: Unique identifier for a service
+      required: true
+      in: path
+      schema:
+        type: string
+    keyId:
+      name: keyId
+      description: Unique identifier for a key
+      required: true
+      in: path
+      schema:
+        type: string
+
+  schemas:
+    KeySummaries:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              keyId:
+                type: string
+              status:
+                type: string
+                enum: [ Compliant, NonCompliant, Unknown, Expired, Terminated ]
+              ageDays:
+                type: number
+
+    ServiceSummaries:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            type: object
+            properties:
+              serviceId:
+                type: string
+              name:
+                type: string
+              status:
+                type: string
+                enum: [ Compliant, NonCompliant, Unknown ]
+    Service:
+      type: object
+      properties:
+        serviceId:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+        maxKeyAgeDays:
+          type: number
+        emails:
+          type: array
+          items:
+            type: string
+    Key:
+      type: object
+      properties:
+        name:
+          type: string
+        keyId:
+          type: string
+        key:
+          type: string
+        status:
+          type: string
+          enum: [ Compliant, NonCompliant, Unknown, Expired, Terminated ]
+        ageDays:
+          type: number
+
+  responses:
+    NoContent:
+      description: The operation was successful and had no data to return
+
+    Created:
+      description: The operation completed successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - serviceId
+            properties:
+              serviceId:
+                type: string
+                example: The identifier of the created service
+
+    BadRequest:
+      description: The input format was incorrect
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                example: The input format is incorrect
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                example: The requested resource was not found
+
+    UnknownError:
+      description: An unexpected error occurred on the server.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                description: Unknown error message
+                example: An unexpected error occurred.
