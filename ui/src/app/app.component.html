@@ -1,0 +1,11 @@
+<toolbar
+  role="toolbar"
+  [user]="user"
+  [themeIcon]="themeIcon"
+  [applicationName]="applicationName"
+  (logoutClicked)="logOut()"
+  (themeClicked)="toggleTheme()">
+</toolbar>
+<div class="scrollable-content-area" role="main">
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,121 @@
+:host {
+  z-index: 1;
+  height: 3.5rem;
+}
+
+:host ::ng-deep mat-toolbar {
+  padding: 0 .5em;
+}
+
+:host ::ng-deep loader > .spinner > mat-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--toolbar-text);
+}
+
+.tyler-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.toolbar {
+  height: 3.5rem;
+  color: var(--toolbar-text);
+  background-color: var(--toolbar);
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  color: #ffffff;
+}
+
+.toolbar-hyperlink {
+  text-decoration: unset;
+  color: unset;
+  gap: 0.5rem;
+}
+
+.toolbar-text {
+  display: flex;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+  font-size: var(--mdc-typography-headline5-font-size, 1.5rem);
+  line-height: var(--mdc-typography-headline5-line-height, 2rem);
+  font-weight: var(--mdc-typography-headline5-font-weight, 400);
+  letter-spacing: var(--mdc-typography-headline5-letter-spacing, normal);
+}
+
+.application {
+  background-color: var(--mdc-theme-secondary);
+  color: var(--mdc-theme-text-primary-on-light, var(--mdc-theme-on-secondary));
+  border-radius: 4px;
+  padding: 1px 0.3em;
+}
+
+.menu-icon-container {
+  cursor: default;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar-action-buttons-container {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button-container {
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1rem 2px 1rem;
+  box-sizing: border-box;
+}
+
+.initials-button {
+  width: 3rem;
+  height: 3rem;
+
+  --mdc-fab-container-color: unset !important;
+}
+
+.initials-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--mdc-theme-on-secondary);
+  background: var(--mdc-theme-secondary);
+}
+
+.initials-text-chip {
+  @extend .initials-text;
+
+  cursor: default;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0.5rem;
+}
+
+.name-email-container {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  gap: 1rem;
+
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    word-break: break-word;
+  }
+
+  .name-text {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    letter-spacing: 0.01em;
+    color: var(--mdc-theme-on-surface);
+  }
+}

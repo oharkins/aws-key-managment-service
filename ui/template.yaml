@@ -1,0 +1,181 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Template that creates resources used to host Ui
+Transform:
+  - AWS::LanguageExtensions
+  - AWS::Serverless-2016-10-31
+
+Mappings:
+  EnvironmentMappings:
+    DeletionPolicy:
+      qa: Retain
+      test: Retain
+      prod: Retain
+      sandbox: Delete
+    UpdateReplacePolicy:
+      qa: Retain
+      test: Retain
+      prod: Retain
+      sandbox: Delete
+
+Parameters:
+  EnvironmentType:
+    Type: String
+    Description: Stage name for API Gateway
+    AllowedValues:
+      - sandbox
+      - prod
+      - test
+      - qa
+  BucketName:
+    Type: String
+    Description: Name of the bucket used to host ui assets
+  ApiName:
+    Type: String
+    Description: Name of the proxy api used to retrieve ui assets
+
+Resources:
+  Api:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Ref ApiName
+      BinaryMediaTypes:
+        - '*/*'
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  Deployment:
+    DependsOn:
+      - Bucket
+      - GetMethod
+      - ProxyGetMethod
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref Api
+      StageName: !Ref EnvironmentType
+
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy:
+      Fn::FindInMap: [EnvironmentMappings, DeletionPolicy, !Ref EnvironmentType]
+    UpdateReplacePolicy:
+      Fn::FindInMap: [EnvironmentMappings, UpdateReplacePolicy, !Ref EnvironmentType]
+    Properties:
+      AccessControl: PublicRead
+      BucketName:
+        Fn::Sub:
+          - ${BucketName}-${AWS::Region}
+          - BucketName: !Ref BucketName
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource:
+              Fn::Sub:
+                - 'arn:${AWS::Partition}:s3:::${Bucket}/*'
+                - Bucket: !Ref Bucket
+            Principal: '*'
+
+  ProxyResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt Api.RootResourceId
+      RestApiId: !Ref Api
+      PathPart: '{proxy+}'
+
+  GetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId: !GetAtt Api.RootResourceId
+      RestApiId: !Ref Api
+      AuthorizationType: NONE
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.ETag: true
+        - StatusCode: '304'
+          ResponseParameters:
+            method.response.header.ETag: true
+      RequestParameters:
+        method.request.header.Content-Type: true
+        method.request.header.Accept: true
+        method.request.header.If-None-Match: true
+      Integration:
+        RequestParameters:
+          integration.request.header.Content-Type: method.request.header.Content-Type
+          integration.request.header.Accept: method.request.header.Accept
+          integration.request.header.If-None-Match: method.request.header.If-None-Match
+        IntegrationHttpMethod: GET
+        Type: HTTP
+        Uri: !GetAtt Bucket.WebsiteURL
+        PassthroughBehavior: WHEN_NO_MATCH
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Content-Type: integration.response.header.Content-Type
+              method.response.header.ETag: integration.response.header.ETag
+          - StatusCode: '304'
+            SelectionPattern: '304'
+            ResponseParameters:
+              method.response.header.ETag: integration.response.header.ETag
+
+  ProxyGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: GET
+      ResourceId: !Ref ProxyResource
+      RestApiId: !Ref Api
+      AuthorizationType: NONE
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Content-Type: true
+            method.response.header.ETag: true
+            method.response.header.Cache-Control: true
+        - StatusCode: '304'
+          ResponseParameters:
+            method.response.header.ETag: true
+            method.response.header.Cache-Control: true
+      RequestParameters:
+        method.request.path.proxy: true
+        method.request.header.Content-Type: true
+        method.request.header.Accept: true
+        method.request.header.If-None-Match: true
+      Integration:
+        CacheKeyParameters:
+          - method.request.path.proxy
+        RequestParameters:
+          integration.request.path.proxy: method.request.path.proxy
+          integration.request.header.Content-Type: method.request.header.Content-Type
+          integration.request.header.Accept: method.request.header.Accept
+          integration.request.header.If-None-Match: method.request.header.If-None-Match
+        IntegrationHttpMethod: GET
+        Type: HTTP
+        Uri:
+          Fn::Sub:
+            - ${WebsiteURL}/{proxy}
+            - WebsiteURL: !GetAtt Bucket.WebsiteURL
+        PassthroughBehavior: WHEN_NO_MATCH
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Content-Type: integration.response.header.Content-Type
+              method.response.header.Cache-Control: "'must-revalidate'"
+              method.response.header.ETag: integration.response.header.ETag
+          - StatusCode: '304'
+            SelectionPattern: '304'
+            ResponseParameters:
+              method.response.header.Cache-Control: "'must-revalidate'"
+              method.response.header.ETag: integration.response.header.ETag

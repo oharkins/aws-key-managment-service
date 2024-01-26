@@ -23,12 +23,12 @@ tags:
 paths:
   /services:
     get:
-      summary: Gets profiles for all gift receivers
+      summary: Gets All Services
       tags:
         - Configuration
       responses:
         200:
-          description: Profile found and was returned
+          description: Service found and was returned
           headers:
             Access-Control-Allow-Origin:
               schema:

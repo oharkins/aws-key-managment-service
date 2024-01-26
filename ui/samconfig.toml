@@ -1,0 +1,30 @@
+version = 0.1
+[qa.deploy.parameters]
+stack_name = ""
+s3_prefix = ""
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = [
+  "EnvironmentType=qa",
+  "BucketName=",
+  "ApiName="
+]
+
+[test.deploy.parameters]
+stack_name = ""
+s3_prefix = ""
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = [
+  "EnvironmentType=test",
+  "BucketName=",
+  "ApiName="
+]
+
+[prod.deploy.parameters]
+stack_name = ""
+s3_prefix = ""
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = [
+  "EnvironmentType=prod",
+  "BucketName=",
+  "ApiName="
+]

@@ -1,0 +1,27 @@
+body, html {
+  margin: unset;
+  min-height: 100vh;
+  font-family: Roboto, sans-serif;
+}
+
+.flex-column, .flex-column-grow  {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.flex-column-grow {
+  flex-grow: 1 !important;
+}
+
+.flex-row-grow {
+  flex-grow: 1 !important;
+}
+
+.flex-row, .flex-row-grow {
+  display: flex !important;
+}
+
+.profile-menu-container {
+  width: min(100vw, 22.5rem);
+  max-width: unset !important;
+}

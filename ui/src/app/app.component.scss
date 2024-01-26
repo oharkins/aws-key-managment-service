@@ -1,0 +1,11 @@
+:host {
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.scrollable-content-area {
+  overflow: auto;
+}
