@@ -67,116 +67,116 @@ Resources:
           Projection:
             ProjectionType: ALL
 
-  CognitoUserPoolClient:
-    Type: AWS::Cognito::UserPoolClient
-    Properties:
-      ClientName: ContentUserPoolClient
-      UserPoolId: !Ref CognitoUserPool
-      AllowedOAuthFlows:
-        - code
-      AllowedOAuthScopes:
-        - email
-        - openid
-        - profile
-      CallbackURLs:
-        - http://localhost:3000
-        - http://localhost:3000/oauth2/idpresponse
-        - !Sub https://${DomainName}
-        - !Sub https://${DomainName}/oauth2/idpresponse
-        - !Sub https://auth.${DomainName}
-        - !Sub https://auth.${DomainName}/oauth2/idpresponse
-      LogoutURLs:
-        - http://localhost:3000/logout
-        - !Sub https://${DomainName}/logout
-      AllowedOAuthFlowsUserPoolClient: true
-      ExplicitAuthFlows:
-        - ALLOW_USER_SRP_AUTH
-        - ALLOW_REFRESH_TOKEN_AUTH
-
-  CognitoIdentityPool:
-    Type: AWS::Cognito::IdentityPool
-    Properties:
-      IdentityPoolName: ContentIdentityPool
-      AllowUnauthenticatedIdentities: false
-      CognitoIdentityProviders:
-        - ClientId: !Ref CognitoUserPoolClient
-          ProviderName: !Sub cognito-idp.${AWS::Region}.amazonaws.com/${CognitoUserPool}
-
-  CognitoAuthenticatedRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-        - Effect: 'Allow'
-          Principal:
-            Federated: 'cognito-identity.amazonaws.com'
-          Action: 'sts:AssumeRoleWithWebIdentity'
-          Condition:
-            StringEquals:
-              'cognito-identity.amazonaws.com:aud': !Ref CognitoIdentityPool
-            'ForAnyValue:StringLike':
-              'cognito-identity.amazonaws.com:amr': authenticated
-      Policies:
-      - PolicyName: CognitoAuthorizedPolicy
-        PolicyDocument:
-          Version: 2012-10-17
-          Statement:
-          - Effect: Allow
-            Action: execute-api:Invoke
-            Resource: !Sub arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${AdminApi}/v1/*/*
-
-  CognitoIdentityPoolRoles:
-    Type: AWS::Cognito::IdentityPoolRoleAttachment
-    Properties:
-      IdentityPoolId: !Ref CognitoIdentityPool
-      Roles:
-        authenticated: !GetAtt CognitoAuthenticatedRole.Arn
-
-  AuthCertificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: !Sub auth.${DomainName}
-      ValidationMethod: DNS
-      DomainValidationOptions:
-        - DomainName: !Sub auth.${DomainName}
-          HostedZoneId: !Ref HostedZoneId
-
-  CognitoUserPool:
-    Type: AWS::Cognito::UserPool
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-    Properties:
-      UserPoolName: KeyManagementUserPool
-      UsernameAttributes:
-        - email
-      AutoVerifiedAttributes:
-        - email
-      Policies:
-        PasswordPolicy:
-          MinimumLength: 8
-          RequireUppercase: true
-          RequireLowercase: true
-          RequireNumbers: true
-          RequireSymbols: false
-
-  CognitoUserPoolDomain:
-    Type: AWS::Cognito::UserPoolDomain
-    Properties:
-      UserPoolId: !Ref CognitoUserPool
-      Domain: !Sub auth.${DomainName}
-      CustomDomainConfig:
-        CertificateArn: !Ref AuthCertificate
-
-  CustomDomainDnsRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Sub auth.${DomainName}
-      ResourceRecords:
-        - !GetAtt CognitoUserPoolDomain.CloudFrontDistribution
-      TTL: "300"
-      Type: CNAME
+#  CognitoUserPoolClient:
+#    Type: AWS::Cognito::UserPoolClient
+#    Properties:
+#      ClientName: ContentUserPoolClient
+#      UserPoolId: !Ref CognitoUserPool
+#      AllowedOAuthFlows:
+#        - code
+#      AllowedOAuthScopes:
+#        - email
+#        - openid
+#        - profile
+#      CallbackURLs:
+#        - http://localhost:3000
+#        - http://localhost:3000/oauth2/idpresponse
+#        - !Sub https://${DomainName}
+#        - !Sub https://${DomainName}/oauth2/idpresponse
+#        - !Sub https://auth.${DomainName}
+#        - !Sub https://auth.${DomainName}/oauth2/idpresponse
+#      LogoutURLs:
+#        - http://localhost:3000/logout
+#        - !Sub https://${DomainName}/logout
+#      AllowedOAuthFlowsUserPoolClient: true
+#      ExplicitAuthFlows:
+#        - ALLOW_USER_SRP_AUTH
+#        - ALLOW_REFRESH_TOKEN_AUTH
+#
+#  CognitoIdentityPool:
+#    Type: AWS::Cognito::IdentityPool
+#    Properties:
+#      IdentityPoolName: ContentIdentityPool
+#      AllowUnauthenticatedIdentities: false
+#      CognitoIdentityProviders:
+#        - ClientId: !Ref CognitoUserPoolClient
+#          ProviderName: !Sub cognito-idp.${AWS::Region}.amazonaws.com/${CognitoUserPool}
+#
+#  CognitoAuthenticatedRole:
+#    Type: AWS::IAM::Role
+#    Properties:
+#      AssumeRolePolicyDocument:
+#        Version: '2012-10-17'
+#        Statement:
+#        - Effect: 'Allow'
+#          Principal:
+#            Federated: 'cognito-identity.amazonaws.com'
+#          Action: 'sts:AssumeRoleWithWebIdentity'
+#          Condition:
+#            StringEquals:
+#              'cognito-identity.amazonaws.com:aud': !Ref CognitoIdentityPool
+#            'ForAnyValue:StringLike':
+#              'cognito-identity.amazonaws.com:amr': authenticated
+#      Policies:
+#      - PolicyName: CognitoAuthorizedPolicy
+#        PolicyDocument:
+#          Version: 2012-10-17
+#          Statement:
+#          - Effect: Allow
+#            Action: execute-api:Invoke
+#            Resource: !Sub arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${AdminApi}/v1/*/*
+#
+#  CognitoIdentityPoolRoles:
+#    Type: AWS::Cognito::IdentityPoolRoleAttachment
+#    Properties:
+#      IdentityPoolId: !Ref CognitoIdentityPool
+#      Roles:
+#        authenticated: !GetAtt CognitoAuthenticatedRole.Arn
+#
+#  AuthCertificate:
+#    Type: AWS::CertificateManager::Certificate
+#    Properties:
+#      DomainName: !Sub auth.${DomainName}
+#      ValidationMethod: DNS
+#      DomainValidationOptions:
+#        - DomainName: !Sub auth.${DomainName}
+#          HostedZoneId: !Ref HostedZoneId
+#
+#  CognitoUserPool:
+#    Type: AWS::Cognito::UserPool
+#    DeletionPolicy: Delete
+#    UpdateReplacePolicy: Delete
+#    Properties:
+#      UserPoolName: KeyManagementUserPool
+#      UsernameAttributes:
+#        - email
+#      AutoVerifiedAttributes:
+#        - email
+#      Policies:
+#        PasswordPolicy:
+#          MinimumLength: 8
+#          RequireUppercase: true
+#          RequireLowercase: true
+#          RequireNumbers: true
+#          RequireSymbols: false
+#
+#  CognitoUserPoolDomain:
+#    Type: AWS::Cognito::UserPoolDomain
+#    Properties:
+#      UserPoolId: !Ref CognitoUserPool
+#      Domain: !Sub auth.${DomainName}
+#      CustomDomainConfig:
+#        CertificateArn: !Ref AuthCertificate
+#
+#  CustomDomainDnsRecord:
+#    Type: AWS::Route53::RecordSet
+#    Properties:
+#      HostedZoneId: !Ref HostedZoneId
+#      Name: !Sub auth.${DomainName}
+#      ResourceRecords:
+#        - !GetAtt CognitoUserPoolDomain.CloudFrontDistribution
+#      TTL: "300"
+#      Type: CNAME
 
   AdminApi:
     Type: AWS::Serverless::Api
@@ -184,11 +184,17 @@ Resources:
       TracingEnabled: true
       StageName: v1
       Auth:
-        Authorizers:
-          CognitoAuth:
-            UserPoolArn: !GetAtt CognitoUserPool.Arn
-        DefaultAuthorizer: CognitoAuth
+        DefaultAuthorizer: LambdaAuthorizer
         AddDefaultAuthorizerToCorsPreflight: false
+        Authorizers:
+          LambdaAuthorizer:
+            FunctionPayloadType: REQUEST
+            FunctionArn: !GetAtt AuthorizerFunction.Arn
+            FunctionInvokeRole: !GetAtt AuthorizerExecutionRole.Arn
+            Identity:
+              Headers:
+                - Authorization
+              ReauthorizeEvery: 3600
       DefinitionBody:
         Fn::Transform:
           Name: AWS::Include
@@ -206,28 +212,28 @@ Resources:
   #         Parameters:
   #           Location: ./openapi-public.yaml
 
-  APICertificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: !Sub api.${DomainName}
-      ValidationMethod: DNS
-      DomainValidationOptions:
-        - DomainName: !Sub api.${DomainName}
-          HostedZoneId: !Ref HostedZoneId
+#  APICertificate:
+#    Type: AWS::CertificateManager::Certificate
+#    Properties:
+#      DomainName: !Sub api.${DomainName}
+#      ValidationMethod: DNS
+#      DomainValidationOptions:
+#        - DomainName: !Sub api.${DomainName}
+#          HostedZoneId: !Ref HostedZoneId
 
-  ApiGatewayDomainName:
-    Type: AWS::ApiGateway::DomainName
-    Properties:
-      DomainName: !Sub api.${DomainName}
-      CertificateArn: !Ref APICertificate
-
-  AdminApiBasePathMapping:
-    Type: AWS::ApiGateway::BasePathMapping
-    Properties:
-      DomainName: !Ref ApiGatewayDomainName
-      RestApiId: !Ref AdminApi
-      Stage: v1
-      BasePath: admin
+#  ApiGatewayDomainName:
+#    Type: AWS::ApiGateway::DomainName
+#    Properties:
+#      DomainName: !Sub api.${DomainName}
+#      CertificateArn: !Ref APICertificate
+#
+#  AdminApiBasePathMapping:
+#    Type: AWS::ApiGateway::BasePathMapping
+#    Properties:
+#      DomainName: !Ref ApiGatewayDomainName
+#      RestApiId: !Ref AdminApi
+#      Stage: v1
+#      BasePath: admin
 
   # PublicApiBasePathMapping:
   #   Type: AWS::ApiGateway::BasePathMapping
@@ -236,15 +242,46 @@ Resources:
   #     RestApiId: !Ref ChatPublicApi
   #     Stage: v1
 
-  Route53RecordSet:
-    Type: AWS::Route53::RecordSet
+#  Route53RecordSet:
+#    Type: AWS::Route53::RecordSet
+#    Properties:
+#      HostedZoneId: !Ref HostedZoneId
+#      Name: !Sub api.${DomainName}
+#      Type: CNAME
+#      TTL: "3600"
+#      ResourceRecords:
+#        - !GetAtt ApiGatewayDomainName.DistributionDomainName
+  AuthorizerExecutionRole:
+    Type: AWS::IAM::Role
     Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Sub api.${DomainName}
-      Type: CNAME
-      TTL: "3600"
-      ResourceRecords:
-        - !GetAtt ApiGatewayDomainName.DistributionDomainName
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: InvokeLambdaAuth
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: !GetAtt AuthorizerFunction.Arn
+  AuthorizerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/authorizer
+      Environment:
+        Variables:
+          ISSUER: "https://tyler-vendengine.oktapreview.com/oauth2/default"
+          AUDIENCES: "api://default"
+      Policies:
+        - AWSLambdaBasicExecutionRole
 
   GetKeysFunction:
     Type: AWS::Serverless::Function
@@ -509,12 +546,15 @@ Resources:
   #           Method: DELETE
 
 Outputs:
-  UserPoolClientId:
-    Description: Id of user pool client
-    Value: !Ref CognitoUserPoolClient
-  IdentityPoolId:
-    Description: Id of the identity pool
-    Value: !Ref CognitoIdentityPool
-  UserPoolId:
-    Description: Id of the user pool
-    Value: !Ref CognitoUserPool
+  APIEndpoint:
+    Description: "API endpoint"
+    Value: !Sub "https://${AdminApi}.execute-api.${AWS::Region}.amazonaws.com/v1"
+#  UserPoolClientId:
+#    Description: Id of user pool client
+#    Value: !Ref CognitoUserPoolClient
+#  IdentityPoolId:
+#    Description: Id of the identity pool
+#    Value: !Ref CognitoIdentityPool
+#  UserPoolId:
+#    Description: Id of the user pool
+#    Value: !Ref CognitoUserPool

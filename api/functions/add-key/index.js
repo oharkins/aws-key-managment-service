@@ -8,7 +8,7 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
     const { serviceId } = event.pathParameters;
-    const tenantId = event.requestContext.authorizer.claims.sub;
+    const tenantId = event.requestContext.authorizer.sub;
 
     for (let i = 0; i < 5; i++) {
       const key = getKey();

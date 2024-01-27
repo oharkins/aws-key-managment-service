@@ -1,0 +1,12 @@
+{
+  "name": "authorizer",
+  "version": "1.0.0",
+  "description": "Lambda authorizer for authenticating connections",
+  "main": "index.js",
+  "author": "Odis Harkins",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@okta/jwt-verifier": "^2.6.0"
+  }
+}

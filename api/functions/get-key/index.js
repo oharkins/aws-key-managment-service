@@ -4,7 +4,7 @@ const ddb = new DynamoDBClient();
 
 exports.handler = async (event) => {
   try {
-    const tenantId = event.requestContext.authorizer.claims.sub;
+    const tenantId = event.requestContext.authorizer.sub;
     const { keyId, serviceId } = event.pathParameters;
 
     const response = await ddb.send(new GetItemCommand({

@@ -10,7 +10,7 @@ exports.handler = async (event) => {
       TableName: process.env.TABLE_NAME,
       KeyConditionExpression: 'pk = :pk and begins_with(sk, :sk)',
       ExpressionAttributeValues: marshall({
-        ':pk': event.requestContext.authorizer.claims.sub,
+        ':pk': event.requestContext.authorizer.sub,
         ':sk': `key#${serviceId}`
       })
     }));

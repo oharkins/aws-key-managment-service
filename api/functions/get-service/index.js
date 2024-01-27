@@ -3,8 +3,9 @@ const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb');
 const ddb = new DynamoDBClient();
 
 exports.handler = async (event) => {
+  console.log('Received event:', JSON.stringify(event, null, 2));
   try {
-    const tenantId = event.requestContext.authorizer.claims.sub;
+    const tenantId = event.requestContext.authorizer.sub;
     const { serviceId } = event.pathParameters;
 
     const response = await ddb.send(new GetItemCommand({

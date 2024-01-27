@@ -3,12 +3,13 @@ const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 const ddb = new DynamoDBClient();
 
 exports.handler = async (event) => {
+  console.log('Received event:', JSON.stringify(event, null, 2));
   try {
     const response = await ddb.send(new QueryCommand({
       TableName: process.env.TABLE_NAME,
       KeyConditionExpression: 'pk = :pk and begins_with(sk, :sk)',
       ExpressionAttributeValues: marshall({
-        ':pk': event.requestContext.authorizer.claims.sub,
+        ':pk': event.requestContext.authorizer.sub,
         ':sk': 'service#'
       })
     }));

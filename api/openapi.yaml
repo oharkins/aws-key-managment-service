@@ -9,6 +9,18 @@ x-amazon-apigateway-request-validators:
     validateRequestParameters: true
     validateRequestBody: true
 
+#x-amazon-apigateway-authorizer
+#    jwt-authorizer-autofind:
+#        type: openIdConnect
+#        openIdConnectUrl: >-
+#        https://tyler-vendengine.oktapreview.com/oauth2/default/.well-known/openid-configuration
+#        x-amazon-apigateway-authorizer:
+#        type: jwt
+#        jwtConfiguration:
+#            audience:
+#            - 'api://default'
+#        identitySource: $request.header.Authorization
+
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
     statusCode: 400
@@ -237,6 +249,23 @@ components:
       in: path
       schema:
         type: string
+  securitySchemes:
+    JwtLambdaAuthorizer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A JSON Web Token that identifies the logged in user. Issuer and audience will be validated based on the environment being used.
+## https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-authorizer.html
+#    jwt-authorizer-autofind:
+#      type: openIdConnect
+#      openIdConnectUrl: >-
+#        https://tyler-vendengine.oktapreview.com/oauth2/default/.well-known/openid-configuration
+#      x-amazon-apigateway-authorizer:
+#        type: jwt
+#        jwtConfiguration:
+#          audience:
+#            - 'api://default'
+#        identitySource: $request.header.Authorization
 
   schemas:
     KeySummaries:

@@ -7,7 +7,7 @@ const ddb = new DynamoDBClient();
 exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
-    const tenantId = event.requestContext.authorizer.claims.sub;
+    const tenantId = event.requestContext.authorizer.sub;
 
     for (let i = 0; i < 5; i++) {
       let success = true;

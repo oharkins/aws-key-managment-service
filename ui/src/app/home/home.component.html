@@ -1,0 +1,51 @@
+<!--<div class="flex-row search-container">-->
+<!--    <mat-form-field appearance="outline" class="search-field">-->
+<!--        <mat-label>Search for an image by tag</mat-label>-->
+<!--        <mat-icon matPrefix>search</mat-icon>-->
+<!--        <input-->
+<!--                matInput-->
+<!--                #input-->
+<!--                (keyup.enter)="search(input.value)"-->
+<!--                (keyup)="reloadTrendingTags(input.value)">-->
+<!--    </mat-form-field>-->
+<!--    <div>-->
+<!--        <button mat-raised-button color="primary" (click)="search(input.value)">Search</button>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <button mat-raised-button color="primary" (click)="searchByImage()">Search By Image</button>-->
+<!--    </div>-->
+<!--</div>-->
+
+<div class="images-container">
+    <ng-container *ngFor="let image of services">
+        image.serviceId
+        <ng-container *ngIf="(image.details | async) as details; else loading">
+            <div [class.image-card]="details" class="image-card flex-column">
+                <div class="flex-column-grow">
+                    <div
+                            class="image-preview"
+                            [matTooltip]="image.imageName"
+                            [matTooltipTouchGestures]="'off'"
+                            [matTooltipPosition]="'above'">
+                        <img [src]="$any(details)?.imageUrls.size120" alt="" />
+                    </div>
+                    <div class="tags-container flex-row">
+                        <div
+                                class="tag"
+                                [matTooltip]="$any(details)?.inmateId"
+                                [matTooltipTouchGestures]="'off'">Inmate Id: {{$any(details)?.inmateId}}
+                        </div>
+                        <div
+                                class="tag"
+                                [matTooltip]="$any(details)?.documentId"
+                                [matTooltipTouchGestures]="'off'">Document Id: {{$any(details)?.documentId}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+    <ng-template #loading>
+        <mat-progress-bar mode="buffer" class="loading flex-column"></mat-progress-bar>
+    </ng-template>
+</div>

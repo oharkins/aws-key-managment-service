@@ -8,7 +8,6 @@ import { AuthenticationModule, DOMAIN_USER_ENDPOINT } from '@tylertech/cj-jpp-ui
 import { removeTrailingSlashes } from '@tylertech/cj-jpp-ui-core/utils';
 import { SESSION_TIMEOUT_CONFIG, SessionTimeoutModule } from '@tylertech/cj-jpp-ui-core/session-timeout';
 import { DOMAIN_INSTANCE_ENDPOINT } from '@tylertech/cj-jpp-ui-core/instance-manager';
-
 import { environment, productKey } from 'src/environments/environment';
 import { httpInterceptorProviders } from './core/interceptors/interceptor.barrel';
 import { AppComponent } from './app.component';
