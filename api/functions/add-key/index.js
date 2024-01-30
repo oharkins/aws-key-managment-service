@@ -52,7 +52,7 @@ exports.handler = async (event) => {
 const saveKey = async (tenantId, serviceId, keyId, key, body) => {
   let currentDate = new Date();
   // Add 90 days to the current date
-  let terminatedDate = currentDate.setDate(currentDate.getDate() + 90);
+  let terminatedDate = currentDate.setDate(currentDate.getDate() + 1);
 
   await ddb.send(new PutItemCommand({
     TableName: process.env.TABLE_NAME,

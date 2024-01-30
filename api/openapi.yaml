@@ -4,6 +4,10 @@ info:
   version: 1.0.0
   description: API for key storage and rotation
 
+servers:
+  - description: Test
+    url: https://gktivbb3r6.execute-api.us-east-1.amazonaws.com/v1
+
 x-amazon-apigateway-request-validators:
   Validate All:
     validateRequestParameters: true

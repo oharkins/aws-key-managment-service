@@ -1,0 +1,13 @@
+{
+  "name": "dependency-layer",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.454.0",
+    "@aws-sdk/util-dynamodb": "^3.454.0",
+    "ulid": "^2.3.0",
+    "@okta/jwt-verifier": "^2.6.0"
+  }
+}

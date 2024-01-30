@@ -1,0 +1,158 @@
+openapi: 3.0.0
+info:
+  title: Public Key API
+  description: |
+    API for Key Access
+  version: 1.0.0
+
+servers:
+  - description: Test
+    url: https://5n889ez75b.execute-api.us-east-1.amazonaws.com/v1
+
+x-amazon-apigateway-request-validators:
+  Validate All:
+    validateRequestParameters: true
+    validateRequestBody: true
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: '{ "message": "$context.error.validationErrorString" }'
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+
+tags:
+  - name: Key
+
+paths:
+  /verify:
+    get:
+      tags:
+        - Key
+      summary: Verify Key
+      description: |
+        Verify Key
+      operationId: verifyKey
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyKeyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${VerifyKeyFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+  /rotate-key:
+    get:
+      tags:
+        - Key
+      summary: Rotate Key
+      description: |
+        Rotate Key
+      operationId: rotateKey
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RotateKeyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RotateKeyFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
+components:
+  securitySchemes:
+    ApiKeyLambdaAuthorizer:
+      type: apiKey
+      name: api-key
+      in: header
+      description: An API Key used to authorize access to the API
+  schemas:
+    VerifyKeyResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message
+          example: Success
+        expirationDate:
+          type: string
+          description: Key Valid Until
+          example: 2021-01-01T00:00:00.000Z
+    RotateKeyResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message
+          example: Success
+        expirationDate:
+          type: string
+          description: Key Valid Until
+          example: 2021-01-01T00:00:00.000Z
+        key:
+          type: string
+          description: Key
+          example: 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+  responses:
+    NotFound:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                example: Invalid passcode
+
+    BadRequest:
+      description: The input format was incorrect
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                example: The input format is incorrect
+
+    UnknownError:
+      description: An unexpected error occurred on the server.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                description: Unknown error message
+                example: An unexpected error occurred.
