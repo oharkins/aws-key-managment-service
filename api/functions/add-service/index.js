@@ -8,11 +8,11 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
     const tenantId = event.requestContext.authorizer.sub;
-
+    const serviceId = ULID.ulid().toLowerCase();
     for (let i = 0; i < 5; i++) {
       let success = true;
       try {
-        await saveProfile(tenantId, ULID.ulid().toLowerCase(), body);
+        await saveProfile(tenantId, serviceId, body);
       } catch (err) {
         if (err.name == 'ConditionalCheckFailedException') {
           success = false;
@@ -23,7 +23,7 @@ exports.handler = async (event) => {
       if (success) {
         return {
           statusCode: 201,
-          body: JSON.stringify({ passcode: profilePasscode }),
+          body: JSON.stringify({ serviceId: serviceId }),
           headers: { 'Access-Control-Allow-Origin': process.env.CORS_ORIGIN }
         };
       }
