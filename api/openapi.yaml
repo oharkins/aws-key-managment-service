@@ -287,8 +287,9 @@ components:
               status:
                 type: string
                 enum: [ Compliant, NonCompliant, Unknown, Expired, Terminated ]
-              ageDays:
-                type: number
+              expirationDate:
+                type: string
+                description: Unix timestamp
 
     ServiceSummaries:
       type: object
@@ -332,8 +333,12 @@ components:
         status:
           type: string
           enum: [ Compliant, NonCompliant, Unknown, Expired, Terminated ]
-        ageDays:
+        expirationDate:
           type: number
+          description: Unix timestamp
+        createdDate:
+          type: string
+          description: Unix timestamp
 
   responses:
     NoContent:

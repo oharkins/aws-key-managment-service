@@ -15,19 +15,19 @@ exports.handler = async (event) => {
       })
     }));
 
-    const profiles = response.Items.map(item => {
+    const keys = response.Items.map(item => {
       const data = unmarshall(item);
       return {
         name: data.name,
-        keyId: data.sort,
+        keyId: data.keyParts.keyId,
         status: data.status ?? 'unknown',
-        ageDays: data.createdDate ?? 'unknown'
+        expirationDate: data.expirationDate ?? 'unknown'
       };
     });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ profiles }),
+      body: JSON.stringify({ keys }),
       headers: {
         'Access-Control-Allow-Origin': process.env.CORS_ORIGIN,
         'Cache-Control': 'max-age=60 public must-revalidate'

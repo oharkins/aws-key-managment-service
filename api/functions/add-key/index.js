@@ -51,8 +51,8 @@ exports.handler = async (event) => {
 
 const saveKey = async (tenantId, serviceId, keyId, key, body) => {
   let currentDate = new Date();
-  // Add 90 days to the current date
-  let terminatedDate = currentDate.setDate(currentDate.getDate() + 1);
+  // Add 10 days to the current date
+  let terminatedDate = new Date(currentDate.setDate(currentDate.getDate() + 10));
 
   await ddb.send(new PutItemCommand({
     TableName: process.env.TABLE_NAME,
@@ -61,10 +61,11 @@ const saveKey = async (tenantId, serviceId, keyId, key, body) => {
       pk: tenantId,
       sk: `key#${serviceId}#${keyId}`,
       type: 'key',
+      key: key,
       sort: key,
       keyParts: { serviceId: serviceId, keyId: keyId},
-      createdDate: currentDate.getTime() / 1000,
-      expirationDate: terminatedDate.getTime() / 1000,
+      createdDate: Math.floor(new Date().getTime() / 1000).toString(),
+      expirationDate: Math.floor(terminatedDate.getTime() / 1000).toString(),
       ...body
     })
   }));

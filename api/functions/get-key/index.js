@@ -31,10 +31,10 @@ exports.handler = async (event) => {
         keyId: data.keyParts.keyId,
         name: data.name,
         key: maskString(data.sort,4),
-        ageDays: data.createdDate ?? 'Unknown',
+        expirationDate: data.expirationDate ?? 'Unknown',
+        createdDate: data.createdDate ?? 'Unknown',
         status: data.status ?? 'Unknown',
-        ...data.facts && { facts: data.facts },
-        ...data.presents && { presents: data.presents }
+        ...data.facts && { facts: data.facts }
       }),
       headers: { 'Access-Control-Allow-Origin': process.env.CORS_ORIGIN }
     };
