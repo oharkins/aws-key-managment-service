@@ -1,0 +1,24 @@
+<div mat-dialog-header class="header">
+    <div>Add Service</div>
+    <button mat-icon-button (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
+</div>
+<mat-dialog-content class="flex-column-grow">
+    <form *ngIf="form" [formGroup]="form" class="flex-column form">
+        <div class="flex-row name-and-finder-container">
+            <mat-form-field appearance="outline" class="name-field">
+                <mat-label> Name </mat-label>
+                <input
+                        matInput
+                        id="name"
+                        formControlName="name"
+                        type="text"
+                        class="form-control">
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<div class="service-buttons">
+    <button mat-stroked-button color="primary" (click)="dialogRef.close(false)" >Cancel</button>
+    <button mat-raised-button color="primary"  [disabled]="form.invalid" (click)="onUpload()">Upload</button>
+</div>

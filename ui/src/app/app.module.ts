@@ -16,6 +16,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { ServiceAddModule } from "./service-add/service-add.module";
+import { KeyAddModule } from "./key-add/key-add.module";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ServiceAddModule } from "./service-add/service-add.module";
     ToolbarComponent,
     MatButtonModule,
     MatIconModule,
-    ServiceAddModule
+    ServiceAddModule,
+    KeyAddModule
   ],
   providers: [
     httpInterceptorProviders,

@@ -26,6 +26,13 @@ export class AdminService {
                 emails: emails
             });
     }
+    public addKey(serviceId: string, name: string): Observable<any>  {
+        const url = `${platformApiUrl}/services/${serviceId}/key`;
+        return this.http.post<any>(url,
+            {
+                name: name,
+            });
+    }
     public getKeys(serviceId:string): Observable<any>  {
         const url = `${platformApiUrl}/services/${serviceId}/keys`;
         return this.http.get<any>(url);
