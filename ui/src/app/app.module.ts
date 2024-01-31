@@ -13,6 +13,9 @@ import { httpInterceptorProviders } from './core/interceptors/interceptor.barrel
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { ServiceAddModule } from "./service-add/service-add.module";
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     OktaAuthModule,
     SessionTimeoutModule,
     ThemeModule,
-    ToolbarComponent
+    ToolbarComponent,
+    MatButtonModule,
+    MatIconModule,
+    ServiceAddModule
   ],
   providers: [
     httpInterceptorProviders,

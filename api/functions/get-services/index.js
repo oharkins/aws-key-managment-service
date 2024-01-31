@@ -27,8 +27,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({ services }),
       headers: {
-        'Access-Control-Allow-Origin': process.env.CORS_ORIGIN,
-        'Cache-Control': 'max-age=60 public must-revalidate'
+        'Access-Control-Allow-Origin': process.env.CORS_ORIGIN
       }
     }
   } catch (err) {

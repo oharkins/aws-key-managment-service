@@ -9,10 +9,13 @@ import { HomeComponent } from './home.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSliderModule } from "@angular/material/slider";
+import { MatTableModule } from "@angular/material/table";
+import { ServiceDetailComponent } from "../service-details/service-details.component";
 
 @NgModule({
     declarations: [
         HomeComponent
+
     ],
     imports: [
         CommonModule,
@@ -24,6 +27,8 @@ import { MatSliderModule } from "@angular/material/slider";
         MatSnackBarModule,
         MatProgressBarModule,
         MatSliderModule,
+        MatTableModule,
+        ServiceDetailComponent
     ]
 })
 export class HomeModule { }

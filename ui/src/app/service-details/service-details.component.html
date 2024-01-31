@@ -1,0 +1,20 @@
+<div>
+    <h2> {{selectedService?.name}} Detail </h2>
+</div>
+
+<ng-container *ngIf="(selectedService.details | async) as details; else loading">
+                    {{$any(details)?.serviceId}}
+                    {{$any(details)?.maxKeyAgeDays}}
+                    {{$any(details)['status'] }}
+            </ng-container>
+
+    <ng-container *ngFor="let key of (keys | async)?.keys">
+    {{$any(key)['name']}}
+    {{$any(key)?.keyId}}
+    {{$any(key)?.expirationDate}}
+    {{$any(key)['status'] }}
+    </ng-container>
+
+    <ng-template #loading>
+        <mat-progress-bar mode="buffer" class="loading flex-column"></mat-progress-bar>
+    </ng-template>

@@ -11,7 +11,8 @@ import { AdminService } from "../core/services/admin.service";
 export class HomeComponent implements OnInit {
 
     public services: any[] = [];
-
+    displayedColumns: string[] = ['serviceId','name','status'];
+    public selectedRow: any = undefined;
 
     constructor(
         private dialog: MatDialog,
@@ -26,13 +27,18 @@ export class HomeComponent implements OnInit {
 
     loadServices()
     {
-        this.adminService.getServices().subscribe(
-            (data: any) => {
-                this.services = data;
+        this.adminService.getServices().subscribe({
+            next: (servicesResponse: any) => {
+                this.services = servicesResponse.services;
             },
-            (error: any) => {
-                this.snackBar.open(error.message, 'Close');
+            error: () => {
+                this.snackBar.open('An error occurred while loading the search results.', 'X', { duration: 3000, panelClass: ['error-snack-bar'] });
             }
-        );
+        });
+    }
+
+    selectRow(row: any) {
+        console.log(row);
+        this.selectedRow = row;
     }
 }

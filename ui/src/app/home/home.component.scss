@@ -28,19 +28,19 @@
   }
 }
 
-.images-container {
+.services-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, max-content));
+  grid-template-columns: repeat(auto-fit, minmax(512px, max-content));
   gap: 1em;
   padding: 1em;
   overflow: hidden;
 }
 
-.image-card {
+.services-card {
   transition: all ease 0.2s;
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.3);
-  border-top-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   background-color: var(--background);
   border: 1px solid var(--border);
   align-items: center;

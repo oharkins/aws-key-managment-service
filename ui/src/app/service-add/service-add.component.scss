@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: .5em;
+  font-size: 1.2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form {
+  padding: 1em;
+}
+
+.name-and-finder-container {
+  align-items: center;
+  gap: .5em;
+  padding: .5em;
+  justify-content: space-between;
+  flex-flow: wrap;
+}
+
+.name-field {
+  font-size: 12px;
+  width: 60%;
+  min-width: 0px;
+  ::ng-deep.mat-form-field-wrapper {
+    margin: unset;
+    padding: unset;
+  }
+}
+
+.service-buttons {
+  padding: .5em;
+  display: flex;
+  gap: 1em;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+}

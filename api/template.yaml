@@ -30,7 +30,7 @@ Globals:
   Api:
     Cors:
       AllowMethods: "'POST,GET,PUT,DELETE,OPTIONS'"
-      AllowHeaders: "'Accept,Content-Type,Authorization,X-Amz-Security-Token,X-Amz-Date,Api-Key'"
+      AllowHeaders: "'Accept,Content-Type,Authorization,X-Amz-Security-Token,X-Amz-Date,Api-Key,InstanceId'"
       AllowOrigin: "'*'"
 
 Resources:
