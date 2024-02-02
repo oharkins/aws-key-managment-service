@@ -92,10 +92,13 @@ components:
     VerifyKeyResponse:
       type: object
       properties:
-        message:
+        status:
           type: string
-          description: Message
-          example: Success
+          enum: [ Active, Expiring, Expired, Frozen ]
+        serviceId:
+          type: string
+          description: Service ID
+          example: 1234567890
         expirationDate:
           type: string
           description: Key Valid Until
@@ -103,10 +106,6 @@ components:
     RotateKeyResponse:
       type: object
       properties:
-        message:
-          type: string
-          description: Message
-          example: Success
         expirationDate:
           type: string
           description: Key Valid Until
