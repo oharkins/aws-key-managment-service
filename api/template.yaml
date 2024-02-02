@@ -30,7 +30,7 @@ Globals:
   Api:
     Cors:
       AllowMethods: "'POST,GET,PUT,DELETE,OPTIONS'"
-      AllowHeaders: "'Accept,Content-Type,Authorization,X-Amz-Security-Token,X-Amz-Date,Api-Key,InstanceId'"
+      AllowHeaders: "'Accept,Content-Type,Authorization,X-Amz-Security-Token,X-Amz-Date,X-Api-Key,InstanceId'"
       AllowOrigin: "'*'"
 
 Resources:
@@ -232,24 +232,12 @@ Resources:
           Name: AWS::Include
           Parameters:
             Location: ./openapi.yaml
-
+# No auth
   KeyApi:
    Type: AWS::Serverless::Api
    Properties:
      TracingEnabled: true
      StageName: v1
-     Auth:
-       DefaultAuthorizer: ApiKeyLambdaAuthorizer
-       AddDefaultAuthorizerToCorsPreflight: false
-       Authorizers:
-         ApiKeyLambdaAuthorizer:
-           FunctionPayloadType: REQUEST
-           FunctionArn: !GetAtt KeyAuthorizerFunction.Arn
-           FunctionInvokeRole: !GetAtt KeyAuthorizerExecutionRole.Arn
-           Identity:
-             Headers:
-               - api-key
-             ReauthorizeEvery: 3600
      DefinitionBody:
        Fn::Transform:
          Name: AWS::Include
@@ -303,41 +291,6 @@ Resources:
 #      TTL: "3600"
 #      ResourceRecords:
 #        - !GetAtt ApiGatewayDomainName.DistributionDomainName
-  KeyAuthorizerExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - apigateway.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName: InvokeLambdaAuth
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - lambda:InvokeFunction
-                Resource: !GetAtt KeyAuthorizerFunction.Arn
-  KeyAuthorizerFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: functions/key-authorizer
-      Policies:
-        - AWSLambdaBasicExecutionRole
-        - Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action: dynamodb:GetItem
-              Resource: !GetAtt KMSTable.Arn
-            - Effect: Allow
-              Action: dynamodb:Query
-              Resource: !Sub ${KMSTable.Arn}/index/types
 
   AuthorizerExecutionRole:
     Type: AWS::IAM::Role
@@ -573,7 +526,7 @@ Resources:
             Path: /service/{serviceId}
             Method: PUT
 
-  VerifyKeyFunction:
+  PublicVerifyKeyFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/get-key
@@ -584,6 +537,10 @@ Resources:
             - Effect: Allow
               Action: dynamodb:Query
               Resource: !Sub ${KMSTable.Arn}/index/types
+            - Effect: Allow
+              Action:
+                - dynamodb:UpdateItem
+              Resource: !GetAtt KMSTable.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref KMSTable
@@ -595,22 +552,22 @@ Resources:
             Path: /verify
             Method: GET
 
-  RotateKeyFunction:
+  PublicRotateKeyFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: functions/get-key
+      CodeUri: functions/public-rotate-key
       Policies:
         - AWSLambdaBasicExecutionRole
         - Version: 2012-10-17
           Statement:
             - Effect: Allow
               Action: dynamodb:Query
-              Resource: !GetAtt KMSTable.Arn
+              Resource: !Sub ${KMSTable.Arn}/index/types
             - Effect: Allow
-              Action: dynamodb:UpdateItem
-              Resource: !GetAtt KMSTable.Arn
-            - Effect: Allow
-              Action: dynamodb:PutItem
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:GetItem
               Resource: !GetAtt KMSTable.Arn
       Environment:
         Variables:
