@@ -4,8 +4,6 @@ import { EVENT_ERROR, OktaAuth } from '@okta/okta-auth-js';
 import { LIGHT_THEME, Theme, ThemeService } from '@tylertech/cj-jpp-ui-core/theme';
 import { SessionTimeoutService, SessionTimeoutStatus } from '@tylertech/cj-jpp-ui-core/session-timeout';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { MatDialog } from "@angular/material/dialog";
-import { ServiceAddComponent } from "./service-add/service-add.component";
 
 @Component({
   selector: 'app',
@@ -26,8 +24,7 @@ export class AppComponent implements OnInit {
     @Inject(OKTA_AUTH) private oktaAuth: OktaAuth,
     private authStateService: OktaAuthStateService,
     private themeService: ThemeService,
-    private sessionTimeoutService: SessionTimeoutService,
-    private dialog: MatDialog
+    private sessionTimeoutService: SessionTimeoutService
   ) {}
 
   ngOnInit() {
@@ -37,11 +34,6 @@ export class AppComponent implements OnInit {
 
   public async logOut() {
     await this.oktaAuth.signOut();
-  }
-  public onAddService() {
-    this.dialog.open(ServiceAddComponent, {
-      panelClass: 'dialog-panel'
-    });
   }
   public toggleTheme() {
     this.themeService.toggleTheme();

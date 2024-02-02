@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AdminService } from "../core/services/admin.service";
+import { ServiceAddComponent } from "../service-add/service-add.component";
 
 @Component({
     selector: 'home',
@@ -24,7 +25,14 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         this.loadServices();
     }
-
+    public onAddService() {
+        this.dialog.open(ServiceAddComponent, {
+            panelClass: 'dialog-panel'
+        });
+        this.dialog.afterAllClosed.subscribe(result => {
+            this.loadServices()
+        });
+    }
     loadServices()
     {
         this.adminService.getServices().subscribe({
@@ -39,6 +47,13 @@ export class HomeComponent implements OnInit {
 
     selectRow(row: any) {
         console.log(row);
-        this.selectedRow = row;
+        this.adminService.getService(row.serviceId).subscribe({
+            next: (servicesResponse: any) => {
+                this.selectedRow = servicesResponse;
+            },
+            error: () => {
+                this.snackBar.open('An error occurred while loading the search results.', 'X', { duration: 3000, panelClass: ['error-snack-bar'] });
+            }
+        });
     }
 }

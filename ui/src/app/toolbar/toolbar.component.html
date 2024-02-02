@@ -19,6 +19,12 @@
   </div>
 
   <div class="flex-row toolbar-action-buttons-container">
+      <button *ngIf="themeIcon" id="change-ou-button" mat-icon-button aria-label="Change Organization">
+          <mat-icon>location_city</mat-icon>
+      </button>
+      <button *ngIf="themeIcon" id="open-alerts-button" mat-icon-button aria-label="View Alerts">
+          <mat-icon>notifications</mat-icon>
+      </button>
     <button *ngIf="themeIcon" id="toggle-theme-button" mat-icon-button (click)="onThemeClicked()" aria-label="Toggle page light and dark themes">
       <mat-icon>{{themeIcon}}</mat-icon>
     </button>

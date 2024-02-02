@@ -10,7 +10,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSliderModule } from "@angular/material/slider";
 import { MatTableModule } from "@angular/material/table";
-import { ServiceDetailComponent } from "../service-details/service-details.component";
+import { MatCardModule } from "@angular/material/card";
+import { MatListModule } from "@angular/material/list";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { KeysComponent } from "../keys/keys.component";
 
 @NgModule({
     declarations: [
@@ -28,7 +31,10 @@ import { ServiceDetailComponent } from "../service-details/service-details.compo
         MatProgressBarModule,
         MatSliderModule,
         MatTableModule,
-        ServiceDetailComponent
+        MatCardModule,
+        MatListModule,
+        MatGridListModule,
+        KeysComponent
     ]
 })
 export class HomeModule { }

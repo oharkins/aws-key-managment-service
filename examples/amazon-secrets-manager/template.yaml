@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  SecretName:
+    Type: String
+    Default: "MySecret"
+    Description: "Name of the Secrets Manager secret"
+  SeedSecret:
+    Type: String
+    Default: "vVYzu3GRFOEGAuXPUjoOhOSRZN77HTIk"
+    NoEcho: true
+    Description: "API KEY From Secrets Manager. This is a seed secret that will be used to generate a new secret value."
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Tracing: Active
+    Timeout: 30
+    MemorySize: 1024
+    Handler: index.handler
+
+Resources:
+  MySecret:
+    Type: "AWS::SecretsManager::Secret"
+    Properties:
+      Name: !Ref SecretName
+      Description: "My secret for demonstration purposes"
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "admin"}'
+        GenerateStringKey: "password"
+        PasswordLength: 12
+        ExcludeCharacters: '"@/\'
+
+  ResetSecretLambda:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: "ResetSecretLambda"
+      Role: !GetAtt ResetSecretLambdaRole.Arn
+      CodeUri: functions/renew-key
+      Environment:
+        Variables:
+          SecretName: !Ref SecretName
+
+  ResetSecretLambdaRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "ResetSecretLambdaRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "SecretsManagerPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "secretsmanager:GetSecretValue"
+                  - "secretsmanager:UpdateSecret"
+                Resource:
+                  - !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${SecretName}-??????"
+
+  ScheduleRule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Name: "ResetSecretSchedule"
+      ScheduleExpression: "rate(20 days)"
+      Targets:
+        - Arn: !GetAtt ResetSecretLambda.Arn
+          Id: "ResetSecretLambdaTarget"

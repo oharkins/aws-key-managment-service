@@ -1,4 +1,4 @@
-export const platformApiUrl = 'https://gktivbb3r6.execute-api.us-east-1.amazonaws.com/v1';
+export const platformApiUrl = 'https://fjotj24gpk.execute-api.us-east-1.amazonaws.com/v1';
 export const baseUiUrl = 'http://localhost:4200';
 export const appHome = `${baseUiUrl}`;
 export const platformUiUrl = 'https://localhost:4200';

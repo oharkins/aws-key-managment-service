@@ -6,7 +6,6 @@ const ddb = new DynamoDBClient();
 
 exports.handler = async (event) => {
   try {
-    const body = JSON.parse(event.body);
     const { serviceId } = event.pathParameters;
     const tenantId = event.requestContext.authorizer.sub;
 
@@ -15,7 +14,7 @@ exports.handler = async (event) => {
       const keyId = ULID.ulid().toLowerCase();
       let success = true;
       try {
-        await saveKey(tenantId, serviceId, keyId, key, body);
+        await saveKey(tenantId, serviceId, keyId, key);
       } catch (err) {
         if (err.name == 'ConditionalCheckFailedException') {
           success = false;
@@ -49,7 +48,7 @@ exports.handler = async (event) => {
   }
 };
 
-const saveKey = async (tenantId, serviceId, keyId, key, body) => {
+const saveKey = async (tenantId, serviceId, keyId, key) => {
   let currentDate = new Date();
   // Add 10 days to the current date
   let terminatedDate = new Date(currentDate.setDate(currentDate.getDate() + 10));
@@ -60,13 +59,13 @@ const saveKey = async (tenantId, serviceId, keyId, key, body) => {
     Item: marshall({
       pk: tenantId,
       sk: `key#${serviceId}#${keyId}`,
+      status: 'Active',
       type: 'key',
       key: key,
       sort: key,
       keyParts: { serviceId: serviceId, keyId: keyId},
       createdDate: Math.floor(new Date().getTime() / 1000).toString(),
       expirationDate: Math.floor(terminatedDate.getTime() / 1000).toString(),
-      ...body
     })
   }));
 };

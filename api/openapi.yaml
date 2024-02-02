@@ -179,19 +179,6 @@ paths:
       summary: Adds a new Key to a service
       tags:
         - Configuration
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              properties:
-                name:
-                  type: string
-              required:
-                - name
-
       responses:
         201:
           $ref: '#/components/responses/Created'
@@ -232,10 +219,47 @@ paths:
         httpMethod: POST
         type: aws_proxy
 
+    delete:
+      summary: Remove key by Key Id and Service Id
+      tags:
+        - Configuration
+      responses:
+        200:
+          description: Key Deleted
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteKeyFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+
   /services/{serviceId}/keys/{keyId}/rotate:
     parameters:
       - $ref: '#/components/parameters/serviceId'
       - $ref: '#/components/parameters/keyId'
+    post:
+      summary: Rotate key for service
+      tags:
+        - Configuration
+      responses:
+        201:
+          $ref: '#/components/responses/Created'
+        403:
+          $ref: '#/components/responses/FrozenError'
+        500:
+          $ref: '#/components/responses/UnknownError'
+      x-amazon-apigateway-request-validator: Validate All
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${AdminRotateKeyFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
 
 components:
   parameters:
@@ -273,23 +297,9 @@ components:
 
   schemas:
     KeySummaries:
-      type: object
-      properties:
-        keys:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              keyId:
-                type: string
-              status:
-                type: string
-                enum: [ Compliant, NonCompliant, Unknown, Expired, Terminated ]
-              expirationDate:
-                type: string
-                description: Unix timestamp
+      type: array
+      items:
+        $ref: "#/components/schemas/Key"
 
     ServiceSummaries:
       type: object
@@ -305,7 +315,7 @@ components:
                 type: string
               status:
                 type: string
-                enum: [ Compliant, NonCompliant, Unknown ]
+                enum: [ Compliant, Non-Compliant, Unknown, Frozen ]
     Service:
       type: object
       properties:
@@ -324,15 +334,13 @@ components:
     Key:
       type: object
       properties:
-        name:
-          type: string
         keyId:
           type: string
         key:
           type: string
         status:
           type: string
-          enum: [ Compliant, NonCompliant, Unknown, Expired, Terminated ]
+          enum: [ Active, Expiring ]
         expirationDate:
           type: number
           description: Unix timestamp
@@ -382,7 +390,19 @@ components:
               message:
                 type: string
                 example: The requested resource was not found
-
+    FrozenError:
+      description: Service is Frozen.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                description: Service Frozen
+                example: Service Is Frozen.
     UnknownError:
       description: An unexpected error occurred on the server.
       content:

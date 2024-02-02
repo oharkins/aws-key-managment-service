@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AdminService } from "../core/services/admin.service";
 
@@ -15,9 +15,10 @@ export class KeyAddComponent {
         public dialogRef: MatDialogRef<KeyAddComponent>,
         private fb: FormBuilder,
         public snackBar: MatSnackBar,
-        private adminService: AdminService
+        private adminService: AdminService,
+        @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
-    @Input() serviceId?: string;
+
     public form = this.fb.group({
         name: ['', [Validators.required, Validators.minLength(1)]]
     });
@@ -25,7 +26,7 @@ export class KeyAddComponent {
     public onUpload() {
         console.log(this.form.value);
         if (this.form.valid) {
-            this.adminService.addKey(this.serviceId || "null", this.form.value.name || "FAIL").subscribe({
+            this.adminService.addKey(this.data!.serviceId).subscribe({
                 next: () => {
                     this.dialogRef.close();
                     this.snackBar.open(`${this.form.value.name} added successfully`, 'X', {

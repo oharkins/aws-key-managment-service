@@ -47,13 +47,3 @@ exports.handler = async (event) => {
     };
   }
 };
-const maskString = (inputString,length) => {
-    if (typeof inputString !== 'string') {
-    return 'Invalid input';
-  }
-  // Calculate the number of characters to mask
-  const maskLength = Math.max(0, inputString.length - length);
-  // Create a masked string with '*' for the characters to be masked
-  const maskedString = '*'.repeat(maskLength) + inputString.slice(maskLength);
-  return maskedString;
-};

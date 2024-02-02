@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     for (let i = 0; i < 5; i++) {
       let success = true;
       try {
-        await saveProfile(tenantId, serviceId, body);
+        await saveService(tenantId, serviceId, body);
       } catch (err) {
         if (err.name == 'ConditionalCheckFailedException') {
           success = false;
@@ -46,7 +46,7 @@ exports.handler = async (event) => {
   }
 };
 
-const saveProfile = async (tenantId,serviceId, body) => {
+const saveService = async (tenantId,serviceId, body) => {
   await ddb.send(new PutItemCommand({
     TableName: process.env.TABLE_NAME,
     ConditionExpression: 'attribute_not_exists(sort)',
@@ -55,6 +55,7 @@ const saveProfile = async (tenantId,serviceId, body) => {
       sk: `service#${serviceId}`,
       type: 'service',
       sort: serviceId,
+      status: 'Compliant',
       ...body
     })
   }));

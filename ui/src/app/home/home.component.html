@@ -1,23 +1,10 @@
-<!--<div class="flex-row search-container">-->
-<!--    <mat-form-field appearance="outline" class="search-field">-->
-<!--        <mat-label>Search for an image by tag</mat-label>-->
-<!--        <mat-icon matPrefix>search</mat-icon>-->
-<!--        <input-->
-<!--                matInput-->
-<!--                #input-->
-<!--                (keyup.enter)="search(input.value)"-->
-<!--                (keyup)="reloadTrendingTags(input.value)">-->
-<!--    </mat-form-field>-->
-<!--    <div>-->
-<!--        <button mat-raised-button color="primary" (click)="search(input.value)">Search</button>-->
-<!--    </div>-->
-<!--    <div>-->
-<!--        <button mat-raised-button color="primary" (click)="searchByImage()">Search By Image</button>-->
-<!--    </div>-->
-<!--</div>-->
-
 <div class="services-container">
-        <table mat-table [dataSource]="services" class="mat-elevation-z8">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Services (4)</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+        <table mat-table [dataSource]="services" class="mat-elevation-z5" style="margin-top: 2em;">
             <ng-container matColumnDef="position">
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectRow(row)"></tr>
@@ -35,29 +22,12 @@
                 </ng-container>
             </ng-container>
         </table>
+        </mat-card-content>
+        <mat-card-actions align="end"  >
+            <button mat-stroked-button (click)="onAddService()">Add Service</button>
+        </mat-card-actions>
+    </mat-card>
     <ng-container *ngIf="selectedRow">
-    <div class="services-card flex-column">
-        <service-detail [selectedService]="selectedRow"></service-detail>
-    </div>
+        <app-keys [ServiceDetails]="selectedRow"></app-keys>
     </ng-container>
-<!--    <div class="services-card flex-column">-->
-<!--    <ng-container *ngFor="let service of services">-->
-<!--        <ng-container *ngIf="(service.details | async) as details; else loading">-->
-<!--                {{service.name}}-->
-<!--                {{$any(details)?.maxKeyAgeDays}}-->
-<!--                <div class="flex-column-grow">-->
-<!--                    <div class="tags-container flex-row">-->
-<!--                        <div-->
-<!--                                class="tag"-->
-<!--                                [matTooltip]="$any(details)?.documentId"-->
-<!--                                [matTooltipTouchGestures]="'off'">Document Id: {{$any(details)?.documentId}}-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--        </ng-container>-->
-<!--    </ng-container>-->
-<!--    <ng-template #loading>-->
-<!--        <mat-progress-bar mode="buffer" class="loading flex-column"></mat-progress-bar>-->
-<!--    </ng-template>-->
-<!--    </div>-->
 </div>
