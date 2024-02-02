@@ -18,8 +18,8 @@ exports.handler = async (event, context, callback) => {
             },
             ExpressionAttributeValues: marshall({
                 ':type': 'key',
-                ':smaller': {N: Math.floor(new Date().getTime() / 1000).toString()},
-                ':larger': {N: Math.floor(terminatedDate.getTime() / 1000).toString()}
+                ':smaller': Math.floor(new Date().getTime() / 1000),
+                ':larger': Math.floor(terminatedDate.getTime() / 1000)
             })
         }));
 
@@ -31,7 +31,7 @@ exports.handler = async (event, context, callback) => {
 
         for (let i = 0; i < GetKeyResponse.Items.length; i++) {
             let keyObject = unmarshall(GetKeyResponse.Items[i]);
-            console.log('Key:', keyObject);
+            //console.log('Key:', keyObject);
             if (keyObject.status === 'Active') {
                 try {
                     await saveAlert(keyObject.pk, keyObject.keyParts.serviceId, keyObject.keyParts.keyId);
