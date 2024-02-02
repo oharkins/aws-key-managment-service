@@ -90,8 +90,8 @@ const saveKey = async (tenantId, serviceId, keyId, key, maxKeyAgeDays) => {
             key: key,
             sort: key,
             keyParts: { serviceId: serviceId, keyId: keyId},
-            createdDate: Math.floor(new Date().getTime() / 1000).toString(),
-            expirationDate: Math.floor(terminatedDate.getTime() / 1000).toString(),
+            createdDate: Math.floor(new Date().getTime() / 1000),
+            expirationDate: Math.floor(terminatedDate.getTime() / 1000),
         })
     }));
 };
@@ -112,7 +112,7 @@ const updateKey = async (tenantId, serviceId, keyId) => {
         },
         ExpressionAttributeValues: {
             ':status': { S: 'Expiring' },
-            ':expirationDate': { S: Math.floor(terminatedDate.getTime() / 1000).toString() }
+            ':expirationDate': { S: Math.floor(terminatedDate.getTime() / 1000) }
         }
     }));
 };

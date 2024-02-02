@@ -345,7 +345,7 @@ components:
           type: number
           description: Unix timestamp
         createdDate:
-          type: string
+          type: number
           description: Unix timestamp
 
   responses:

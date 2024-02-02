@@ -22,8 +22,8 @@ exports.handler = async (event) => {
         keyId: data.keyParts.keyId,
         name: data.name,
         key: maskString(data.sort,4),
-        expirationDate: data.expirationDate ?? 'Unknown',
-        createdDate: data.createdDate ?? 'Unknown',
+        expirationDate: data.expirationDate ?? 0,
+        createdDate: data.createdDate ?? 0,
         status: data.status ?? 'Unknown',
         ...data.facts && { facts: data.facts }
       };

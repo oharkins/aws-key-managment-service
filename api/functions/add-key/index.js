@@ -64,8 +64,8 @@ const saveKey = async (tenantId, serviceId, keyId, key) => {
       key: key,
       sort: key,
       keyParts: { serviceId: serviceId, keyId: keyId},
-      createdDate: Math.floor(new Date().getTime() / 1000).toString(),
-      expirationDate: Math.floor(terminatedDate.getTime() / 1000).toString(),
+      createdDate: Math.floor(new Date().getTime() / 1000),
+      expirationDate: Math.floor(terminatedDate.getTime() / 1000),
     })
   }));
 };

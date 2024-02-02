@@ -71,7 +71,7 @@ Resources:
         - AttributeName: sort
           AttributeType: S
         - AttributeName: expirationDate
-          AttributeType: S
+          AttributeType: N
       GlobalSecondaryIndexes:
         - IndexName: types
           KeySchema:
