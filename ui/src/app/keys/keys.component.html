@@ -3,7 +3,7 @@
         <mat-card-title>Service Details</mat-card-title>
         <mat-card-subtitle>Service Id: {{ ServiceDetails.serviceId }}</mat-card-subtitle>
     </mat-card-header>
-    <ng-container *ngIf="(keys | async) as keys">
+
     <mat-card-content>
         <mat-grid-list cols="3" rowHeight="4:1" style="margin-top: 1em;">
             <mat-grid-tile>
@@ -21,6 +21,7 @@
                 <div class="value">{{ ServiceDetails.maxKeyAgeDays }} Days</div>
             </div></mat-grid-tile>
         </mat-grid-list>
+        <ng-container *ngIf="(key$ | async) as keys">
         <ng-container *ngFor="let key of keys; index as i">
         <mat-card class="keys-card mat-elevation-z5">
                 <mat-card-title style="font-size: 1.125em;">
@@ -50,9 +51,10 @@
             </mat-card-content>
         </mat-card>
         </ng-container>
+    </ng-container>
     </mat-card-content>
-    <mat-card-actions align="end" *ngIf="keys.length == 0" >
+    <mat-card-actions align="end" *ngIf="showAddKey" >
         <button mat-button (click)="onAddKey()">Create API Key</button>
     </mat-card-actions>
-    </ng-container>
+
 </mat-card>
