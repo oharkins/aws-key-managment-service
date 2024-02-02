@@ -135,7 +135,7 @@ const updateKey = async (tenantId, serviceId, keyId) => {
         },
         ExpressionAttributeValues: {
             ':status': { S: 'Expiring' },
-            ':expirationDate': { S: Math.floor(terminatedDate.getTime() / 1000) }
+            ':expirationDate': { N: Math.floor(terminatedDate.getTime() / 1000) }
         }
     }));
 };
