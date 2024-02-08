@@ -1,0 +1,46 @@
+<forge-app-bar title-text="Forge Angular Template" (forge-app-bar-search)="onSearch($any($event))">
+  <forge-app-bar-menu-button slot="start" (click)="onMenuClicked()"></forge-app-bar-menu-button>
+  <forge-icon slot="logo" name="tyler_talking_t_logo" style="font-size: 3rem; height: auto; width: auto;"></forge-icon>
+  <forge-app-bar-search slot="center">
+    <input type="text" placeholder="Search..." />
+  </forge-app-bar-search>
+  <forge-icon-button slot="end">
+    <button type="button"
+            #instancePopup="forgePopup"
+            [forgePopup]="instanceListTemplate"
+            (click)="instancePopup.open()">
+      <forge-icon name="location_city" external external-type="standard"></forge-icon>
+      <forge-tooltip position="bottom">Switch instance</forge-tooltip>
+    </button>
+  </forge-icon-button>
+
+  <ng-template #instanceListTemplate>
+    <forge-popup placement="bottom-end">
+      <div class="instance-popup">
+        <forge-list>
+          <forge-list-item>
+            <div class="instance-name">Tyler Technologies</div>
+          </forge-list-item>
+          <forge-list-item>
+            <div class="instance-name">Other OU</div>
+          </forge-list-item>
+        </forge-list>
+      </div>
+    </forge-popup>
+  </ng-template>
+  <forge-app-bar-notification-button slot="end"></forge-app-bar-notification-button>
+  <forge-icon-button slot="end">
+    <button type="button" (click)="toggleTheme()">
+      <forge-icon [name]="themeSwitcherIcon"></forge-icon>
+    </button>
+  </forge-icon-button>
+  <div slot="profile">v12.x</div>
+  <forge-app-bar-profile-button
+    slot="end"
+    profile-button="true"
+    [avatarText]="'Odis Harkins'"
+    [fullName]="'Odis Harkins'"
+    [email]="'odis.harkins@tylertech.com'"
+    profileButton="false">
+  </forge-app-bar-profile-button>
+</forge-app-bar>
