@@ -1,39 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { ForgeModule, DialogService } from "@tylertech/forge-angular";
-import { DemoCardComponent } from "../../shared/components/demo-card/demo-card.component";
+import { DialogService, IDialogOptions } from "@tylertech/forge-angular";
 import { IColumnConfiguration, SortDirection } from "@tylertech/forge";
-import { BehaviorSubject, Observable } from "rxjs";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { Observable } from "rxjs";
 import { AdminService } from "../../core/services/admin.service";
 import { Router } from "@angular/router";
-import { ServiceAddComponent } from "../../service-add/service-add.component";
-
-
-interface IService {
-  [key: string]: any;
-  Id: number;
-  Name: string;
-  Age: number;
-  Position: string;
-  FavoriteColor: string;
-}
+import { AddServiceComponent } from "./add-service/add-service.component";
 
 @Component({
   selector: 'app-home',
   templateUrl: './services.component.html',
-  standalone: true,
-  imports: [
-    ForgeModule,
-    DemoCardComponent,
-    AsyncPipe,
-    NgIf
-  ],
   styleUrls: ['./services.component.scss']
 })
 export class ServicesComponent implements OnInit{
 
   public data$: Observable<any> | undefined;
-  constructor(private adminService: AdminService, private router: Router, private _dialogService: DialogService) {
+
+  public multiColumnSortConfigurations: IColumnConfiguration[] = [
+    { header: 'Service Id', property: 'serviceId', sortable: true, initialSort: { sortOrder: 1, direction: SortDirection.Descending, propertyName: 'Name' } },
+    { header: 'Name', property: 'name', sortable: true },
+    { header: 'Status', property: 'status', sortable: true }
+  ];
+
+  constructor(
+      private adminService: AdminService,
+      private router: Router,
+      private _dialogService: DialogService) {
   }
 
   public async onRowClick(evt: CustomEvent): Promise<void> {
@@ -42,27 +33,26 @@ export class ServicesComponent implements OnInit{
   }
 
   public ngOnInit(): void {
-    this.data$ = this.adminService.getServices()
+    this.loadData();
   }
-  public multiColumnSortConfigurations: IColumnConfiguration[] = [
-    { header: 'Service Id', property: 'serviceId', sortable: true, initialSort: { sortOrder: 1, direction: SortDirection.Descending, propertyName: 'Name' } },
-    { header: 'Name', property: 'name', sortable: true },
-    { header: 'Status', property: 'status', sortable: true }
-  ];
+  public loadData(): void {
+    this.data$ = this.adminService.getServices();
+  }
 
   public onAddService(): void {
     // Set any options to be applied to the <forge-dialog> component
-    const dialogOptions = {
+    const dialogOptions: IDialogOptions = {
       backdropClose: false,
       escapeClose: true
     };
 
     // Show the dialog
-    const dialogRef = this._dialogService.show(ServiceAddComponent, dialogOptions);
+    const dialogRef = this._dialogService.show(AddServiceComponent, dialogOptions);
 
     // Subscribe to the afterClosed observable to know when the dialog is closed
     const sub = dialogRef.afterClosed.subscribe(result => {
       console.log('Dialog result:', result);
+        this.loadData();
       sub.unsubscribe();
     });
   }

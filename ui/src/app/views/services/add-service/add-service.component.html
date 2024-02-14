@@ -1,0 +1,58 @@
+<div class="app-dialog">
+    <forge-scaffold>
+        <div slot="header" class="card-header">
+            <div>
+                <h2>Add Service</h2>
+            </div>
+            <forge-divider></forge-divider>
+        </div>
+        <div slot="body">
+            <form [formGroup]="addServiceForm" (ngSubmit)="onSubmit()" novalidate>
+                <div class="forge-demo-form-field">
+                    <forge-text-field required [invalid]="isInvalid('serviceDescription')">
+                        <label for="serviceDescription">Service Description</label>
+                        <input type="text" id="serviceDescription" formControlName="serviceDescription" />
+                        <span slot="helper-text">{{isInvalid('firstName') ? 'A service description is required' : 'Enter service Description'}}</span>
+                    </forge-text-field>
+                </div>
+                <div class="forge-demo-form-field">
+                    <forge-text-field required [invalid]="isInvalid('email')">
+                        <label for="email">Email</label>
+                        <input type="text" id="email" formControlName="email" />
+                    </forge-text-field>
+                </div>
+                <div class="forge-demo-form-field">
+                    <forge-quantity-field [invalid]="maxAgeControl.invalid" required>
+                        <label slot="label">Max Age</label>
+                        <forge-icon-button slot="decrement-button">
+                            <button type="button">
+                                <forge-icon name="remove_circle_outline"></forge-icon>
+                            </button>
+                        </forge-icon-button>
+                        <forge-text-field>
+                            <input type="number" style="text-align: center; width: 64px;" step="1" min="0" max="100" formControlName="maxAge" />
+                        </forge-text-field>
+                        <forge-icon-button slot="increment-button">
+                            <button type="button">
+                                <forge-icon name="add_circle_outline" external></forge-icon>
+                            </button>
+                        </forge-icon-button>
+                        <div slot="helper-text" *ngIf="!maxAgeControl.invalid">Max Key Age</div>
+                        <div slot="helper-text" *ngIf="maxAgeControl.invalid">Number of days must be 14 or greater</div>
+                    </forge-quantity-field>
+                </div>
+            </form>
+        </div>
+        <div slot="footer" class="card-footer">
+            <forge-divider></forge-divider>
+            <div>
+                <forge-button>
+                    <button type="button" (click)="onCancel()">Cancel</button>
+                </forge-button>
+                <forge-button type="raised">
+                    <button [disabled]="!addServiceForm.valid" (click)="onSubmit()">Submit</button>
+                </forge-button>
+            </div>
+        </div>
+    </forge-scaffold>
+</div>

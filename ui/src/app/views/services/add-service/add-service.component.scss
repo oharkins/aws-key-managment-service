@@ -1,0 +1,36 @@
+.app-dialog {
+  padding: 16px;
+
+}
+.card-header {
+  forge-divider {
+    margin: .125em 0 .5em 0;
+  }
+  h2 {
+    margin: 0;
+  }
+  div {
+    display: flex;
+    Align-items: center;
+    justify-content: space-between;
+  }
+}
+.card-footer {
+  forge-divider {
+    margin: 0 0 1em 0;
+  }
+  div {
+    display: flex;
+    justify-content: end;
+    button {
+      margin-left: 8px;
+    }
+  }
+}
+.forge-demo-form-field {
+  margin-bottom: 16px;
+
+  forge-text-field, forge-select {
+    max-width: 320px;
+  }
+}
