@@ -1,0 +1,46 @@
+<forge-app-bar title-text="Key Management Service" (forge-app-bar-search)="onSearch($any($event))">
+  <forge-app-bar-menu-button slot="start" (click)="onMenuClicked()"></forge-app-bar-menu-button>
+    <img slot="logo"  ngSrc="assets/icon.png" alt="logo" style="height: 3rem; width: auto;" height="96" width="96">
+  <forge-icon-button slot="end">
+    <button type="button"
+            #instancePopup="forgePopup"
+            [forgePopup]="instanceListTemplate"
+            (click)="instancePopup.open()">
+      <forge-icon name="location_city" external external-type="standard"></forge-icon>
+      <forge-tooltip position="bottom">Switch instance</forge-tooltip>
+    </button>
+  </forge-icon-button>
+
+  <ng-template #instanceListTemplate>
+    <forge-popup placement="bottom-end">
+      <div class="instance-popup">
+        <forge-list>
+            <forge-list-item>
+                <div class="instance-name">{{ user?.name }}</div>
+            </forge-list-item>
+          <forge-list-item>
+            <div class="instance-name">Corrections mobile</div>
+          </forge-list-item>
+          <forge-list-item>
+            <div class="instance-name">Other OU</div>
+          </forge-list-item>
+        </forge-list>
+      </div>
+    </forge-popup>
+  </ng-template>
+  <forge-app-bar-notification-button slot="end"></forge-app-bar-notification-button>
+  <forge-icon-button slot="end">
+    <button type="button" (click)="toggleTheme()">
+      <forge-icon [name]="themeSwitcherIcon"></forge-icon>
+    </button>
+  </forge-icon-button>
+  <div slot="profile">v12.x</div>
+  <forge-app-bar-profile-button
+    slot="end"
+    (forge-profile-card-sign-out)="handleSignOutButtonCLick()"
+    [avatarText]="user?.name"
+    [fullName]="user?.name"
+    [email]="user?.email"
+    profileButton="false">
+  </forge-app-bar-profile-button>
+</forge-app-bar>

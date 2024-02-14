@@ -1,11 +1,7 @@
-<toolbar
-  role="toolbar"
-  [user]="user"
-  [themeIcon]="themeIcon"
-  [applicationName]="applicationName"
-  (logoutClicked)="logOut()"
-  (themeClicked)="toggleTheme()">
-</toolbar>
-<div class="scrollable-content-area" role="main">
-  <router-outlet></router-outlet>
-</div>
+<forge-scaffold>
+    <app-header slot="header" (menuClicked)="onMenuClicked()" [user]="user" ></app-header>
+    <app-sidenav slot="body-left" [open]="isDrawerOpen" (onClose)="isDrawerOpen = false"></app-sidenav>
+    <div class="app-content" slot="body">
+        <router-outlet></router-outlet>
+    </div>
+</forge-scaffold>

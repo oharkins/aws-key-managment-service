@@ -37,9 +37,6 @@
               }
             ],
             "styles": [
-              "./node_modules/@tylertech/cj-jpp-ui-core/styles/typography.scss",
-              "./node_modules/@tylertech/cj-jpp-ui-core/theme/styles/theme.scss",
-              "./node_modules/@tylertech/cj-jpp-ui-core/styles/form-field-fill.scss",
               "src/styles.scss"
             ]
           },

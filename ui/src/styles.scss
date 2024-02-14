@@ -1,27 +1,12 @@
-body, html {
-  margin: unset;
-  min-height: 100vh;
-  font-family: Roboto, sans-serif;
+@use '@tylertech/forge/dist/forge-core';
+@use '@tylertech/forge/dist/forge';
+@use '@tylertech/forge/dist/utils/forge-flex';
+@use '@tylertech/forge/styles/theme/theme-dark' as forge-theme-dark;
+
+.app-theme-dark {
+  @include forge-theme-dark.theme-properties;
 }
 
-.flex-column, .flex-column-grow  {
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-.flex-column-grow {
-  flex-grow: 1 !important;
-}
-
-.flex-row-grow {
-  flex-grow: 1 !important;
-}
-
-.flex-row, .flex-row-grow {
-  display: flex !important;
-}
-
-.profile-menu-container {
-  width: min(100vw, 22.5rem);
-  max-width: unset !important;
+forge-text-field,forge-select,forge-chip-field {
+  margin: 8px 0;
 }

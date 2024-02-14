@@ -1,0 +1,14 @@
+<app-demo-card headerText="Services" [fullWidth]="true">
+    <forge-table
+            allowRowClick="true"
+            [columnConfigurations]="multiColumnSortConfigurations"
+            [data]="(data$ | async)?.services ?? []"
+            selectKey="serviceId"
+            (forge-table-row-click)="onRowClick($event)">
+    </forge-table>
+        <div class="action-button">
+            <forge-button type="raised">
+                <button type="button" (click)="onAddService()">Add Service</button>
+            </forge-button>
+        </div>
+</app-demo-card>
