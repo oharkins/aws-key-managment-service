@@ -1,12 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  AWS Key Management Service (KMS) is a managed service that makes it easy to expire and renew keys used for cross applcation authentication. This is designed to be used for System to System Validation
+  AWS Key Management Service (KMS) is a managed service that makes it easy to expire and renew keys used for cross 
+  application authentication. This is designed to be used for system to system validation
 
 Parameters:
   DomainName:
     Type: String
-    Default: 'corrections-dev.tylermobileapps.com'
+    Default: 'kms.dev.harkinstech.com'
   CORSOrigin:
     Type: String
     Default: '*'
