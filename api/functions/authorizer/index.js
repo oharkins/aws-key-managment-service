@@ -88,12 +88,7 @@ exports.generateContext = (user, sub) => {
         // userId: user.id,
         // tenantId: user.tenantId,
         ...user.firstName && { userFirstName: user.firstName },
-        ...user.lastName && { userLastName: user.lastName },
-        ...user.agencies && { agencies: JSON.stringify(user.agencies) },
-        ...user.courts && { courts: JSON.stringify(user.courts) },
-        ...user.attorneyOffices && { attorneyOffices: JSON.stringify(user.attorneyOffices) },
-        ...user.roles && { roles: JSON.stringify(user.roles) },
-        ...user.activeOrganizations && { activeOrganizations: JSON.stringify(user.activeOrganizations) },
+        ...user.lastName && { userLastName: user.lastName }
     };
 };
 
