@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { OktaAuthGuard, OktaCallbackComponent } from '@okta/okta-angular';
 import { ProfileComponent } from "./profile/profile.component";
 import { ServicesComponent } from "./views/services/services.component";
-import { ServiceDetailsComponent } from "./views/service-details/service-details.component";
+import {ServiceDetailsComponent} from "./views/services/service-details/service-details.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/services', pathMatch: 'full' },

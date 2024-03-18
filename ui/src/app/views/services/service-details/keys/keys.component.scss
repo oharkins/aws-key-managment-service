@@ -1,0 +1,23 @@
+:host {
+  --forge-card-padding: 0;
+}
+
+.padding-16 {
+  padding: 16px;
+}
+
+.card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 16px;
+}
+
+.toolbar--no-footer {
+  --forge-toolbar-border-bottom: none;
+}
+.key-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+

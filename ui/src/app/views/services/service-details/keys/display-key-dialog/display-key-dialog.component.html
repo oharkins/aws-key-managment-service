@@ -1,0 +1,29 @@
+<div class="app-dialog">
+    <forge-scaffold>
+        <div slot="header" class="card-header">
+            <div>
+                <h2>Service Key</h2>
+            </div>
+            <forge-divider></forge-divider>
+        </div>
+        <div slot="body">
+            <div class="forge-demo-form-field">
+                <forge-text-field aria-readonly="true">
+                    <label for="keyValue">Key Value</label>
+                    <input id="keyValue" #textInput [value]="dialogConfig.data.key" minlength="48" readonly/>
+                </forge-text-field>
+            </div>
+        </div>
+        <div slot="footer" class="card-footer">
+            <forge-divider></forge-divider>
+            <div>
+                <forge-button>
+                    <button type="button" (click)="copyToClipboard()">Copy To Clipboard</button>
+                </forge-button>
+                <forge-button>
+                    <button type="button" (click)="onCancel()">Close</button>
+                </forge-button>
+            </div>
+        </div>
+    </forge-scaffold>
+</div>

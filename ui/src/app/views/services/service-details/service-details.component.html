@@ -1,0 +1,35 @@
+<div class="container">
+    <forge-card class="span-full">
+        <forge-scaffold>
+            <forge-toolbar slot="header" class="toolbar--no-footer">
+                <h3 slot="start" class="forge-typography--headline5">Service Details</h3>
+                <forge-badge muted theme="info-primary" slot="end">{{ service.status }}</forge-badge>
+            </forge-toolbar>
+
+            <div slot="body" class="padding-16 card-body">
+                <forge-label-value>
+                    <span slot="label">Name</span>
+                    <span slot="value">{{ service.name }}</span>
+                </forge-label-value>
+                <forge-label-value>
+                    <span slot="label">Service Status</span>
+                    <span slot="value">{{ service.status }}</span>
+                </forge-label-value>
+                <forge-label-value>
+                    <span slot="label">Primary Email</span>
+                    <span slot="value">{{ service.emails }}</span>
+                </forge-label-value>
+                <forge-label-value>
+                    <span slot="label">Secondary Email</span>
+                    <span slot="value"></span>
+                </forge-label-value>
+            </div>
+            <forge-toolbar slot="footer">
+                <forge-button type="outlined" slot="end">
+                    <button type="button" (click)="keysComponent?.onAddKey()">Add Key</button>
+                </forge-button>
+            </forge-toolbar>
+        </forge-scaffold>
+    </forge-card>
+    <app-keys class="span-full" [ServiceDetails]="service"></app-keys>
+</div>

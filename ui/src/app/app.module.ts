@@ -9,11 +9,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { KeyAddModule } from "./key-add/key-add.module";
 import { ForgeModule } from "@tylertech/forge-angular";
 import { HeaderComponent } from "./components/header/header.component";
-import { SidenavComponent } from "./components/sidenav/sidenav.component";
 import { ServicesModule } from "./views/services/services.module";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -26,11 +25,10 @@ import { ServicesModule } from "./views/services/services.module";
         OktaAuthModule,
         MatButtonModule,
         MatIconModule,
-        KeyAddModule,
         ServicesModule,
         ForgeModule,
         HeaderComponent,
-        SidenavComponent
+        MatSnackBarModule
     ],
   providers: [
     httpInterceptorProviders,

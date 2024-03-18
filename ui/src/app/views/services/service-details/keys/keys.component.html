@@ -1,0 +1,29 @@
+<forge-card>
+    <ng-container *ngIf="(key$ | async) as keys">
+        <div *ngFor="let key of keys; index as i">
+            <div class="padding-16">
+                <div class="key-header">
+                    <h3 class="forge-typography--subtitle1-secondary span-full">{{ $any(key)?.key }}</h3>
+                    <button mat-stroked-button style="float: right;"
+                            (click)="onRotateOrDeleteKey(i, key.keyId)">{{ i == 0 ? 'Role Key' : 'Delete Key' }}
+                    </button>
+                </div>
+                <div slot="body" class="padding-16 card-body">
+                    <forge-label-value>
+                        <span slot="label">From</span>
+                        <span slot="value">{{ ($any(key)?.expirationDate * 1000) | date: 'medium' }}</span>
+                    </forge-label-value>
+                    <forge-label-value>
+                        <span slot="label">Date</span>
+                        <span slot="value">{{ ($any(key)?.createdDate * 1000) | date: 'medium' }}</span>
+                    </forge-label-value>
+                    <forge-label-value>
+                        <span slot="label">Type</span>
+                        <span slot="value">{{ $any(key)['status'] }}</span>
+                    </forge-label-value>
+                </div>
+            </div>
+            <forge-divider class="span-full"></forge-divider>
+        </div>
+    </ng-container>
+</forge-card>
